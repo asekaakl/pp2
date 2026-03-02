@@ -1,0 +1,45 @@
+{
+  "merchant": {
+    "name": "Филиал ТОО EUROPHARMA Астана",
+    "bin": "080841000762",
+    "receipt_number": "0014371",
+    "cashbox": "300-190",
+    "shift": "10",
+    "order_number": "61",
+    "fiscal_sign": "2331180266"
+  },
+  "datetime": "2019-04-18T11:13:58",
+  "location": "г. Нур-султан, Казахстан, Мангилик Ел, 19, нп-5",
+  "items": [
+    { "name": "Натрия хлорид 0,9%, 200 мл, фл", "qty": 2, "unit_price": 154.00, "line_total": 308.00 },
+    { "name": "Борный спирт 3%, 20 мл, фл.", "qty": 1, "unit_price": 51.00, "line_total": 51.00 },
+    { "name": "Шприц 2 мл, 3-х комп. (Bioject)", "qty": 2, "unit_price": 16.00, "line_total": 32.00 },
+    { "name": "Система для инфузии Vogt Medical", "qty": 2, "unit_price": 60.00, "line_total": 120.00 },
+    { "name": "Шприц 5 мл, 3-х комп.", "qty": 1, "unit_price": 310.00, "line_total": 310.00 },
+    { "name": "AURA Ватные диски №150", "qty": 1, "unit_price": 461.00, "line_total": 461.00 },
+    { "name": "Чистая линия скраб мягкий 50 мл", "qty": 1, "unit_price": 381.00, "line_total": 381.00 },
+    { "name": "Чистая линия скраб очищающий абрикос 50 мл", "qty": 1, "unit_price": 386.00, "line_total": 386.00 },
+    { "name": "Чистая линия скраб мягкий 50 мл", "qty": 1, "unit_price": 381.00, "line_total": 381.00 },
+    { "name": "Nivea шампунь 3в1 мужской 400 мл", "qty": 1, "unit_price": 414.00, "line_total": 414.00 },
+    { "name": "Pro Series Шампунь яркий цвет 500 мл", "qty": 1, "unit_price": 841.00, "line_total": 841.00 },
+    { "name": "Pro Series бальзам-ополаскиватель (яркий цвет) 500 мл", "qty": 1, "unit_price": 841.00, "line_total": 841.00 },
+    { "name": "Clear шампунь Актив спорт 2в1 мужской 400 мл", "qty": 1, "unit_price": 1200.00, "line_total": 1200.00 },
+    { "name": "Bio World (HYDRO THERAPY) Мицеллярная вода 5в1, 445 мл", "qty": 1, "unit_price": 1152.00, "line_total": 1152.00 },
+    { "name": "Bio World (HYDRO THERAPY) Гель-мусс для умывания с гиалуроновой кислотой, 250 мл", "qty": 1, "unit_price": 1152.00, "line_total": 1152.00 },
+    { "name": "[RX]-Натрия хлорид 0,9%, 100 мл, фл.", "qty": 1, "unit_price": 168.00, "line_total": 168.00 },
+    { "name": "[RX]-Дисоль р-р 400 мл, фл.", "qty": 1, "unit_price": 163.00, "line_total": 163.00 },
+    { "name": "Тагансорбент с ионами серебра №30, пор.", "qty": 1, "unit_price": 1526.00, "line_total": 1526.00 },
+    { "name": "[RX]-Церукал 2%, 2 мл, №10, амп.", "qty": 2, "unit_price": 396.00, "line_total": 792.00 },
+    { "name": "[RX]-Андазол 200 мг, №40, табл.", "qty": 1, "unit_price": 7330.00, "line_total": 7330.00 }
+  ],
+  "totals": {
+    "subtotal": 18009.00,
+    "vat_rate": 0.12,
+    "vat_amount": 0.00,
+    "total": 18009.00
+  },
+  "payment": {
+    "method": "Банковская карта",
+    "amount": 18009.00
+  }
+}
