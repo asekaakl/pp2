@@ -9,10 +9,10 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS phonebook (
+    DROP TABLE IF EXISTS phonebook;
+    CREATE TABLE phonebook (
         id SERIAL PRIMARY KEY,
-        first_name VARCHAR(50),
-        last_name VARCHAR(50),
+        username VARCHAR(50),
         phone VARCHAR(20) UNIQUE NOT NULL
     );
 """)

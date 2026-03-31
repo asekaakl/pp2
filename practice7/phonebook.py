@@ -18,10 +18,10 @@ def insert_from_csv(filename):
         reader = csv.DictReader(f)
         for row in reader:
             cur.execute("""
-                INSERT INTO phonebook (first_name, last_name, phone)
-                VALUES (%s, %s, %s)
+                INSERT INTO phonebook (username, phone)
+                VALUES (%s, %s)
                 ON CONFLICT (phone) DO NOTHING;
-            """, (row['first_name'], row['last_name'], row['phone']))
+            """, (row['username'], row['phone']))
     conn.commit()
     cur.close()
     conn.close()
