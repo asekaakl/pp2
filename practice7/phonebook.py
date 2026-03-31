@@ -16,12 +16,16 @@ def insert_from_csv(filename):
     cur = conn.cursor()
     with open(filename, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames
+        print(f"Колонки в CSV: {fieldnames}")
+        col_name = fieldnames[0]
+        col_phone = fieldnames[1]
         for row in reader:
             cur.execute("""
                 INSERT INTO phonebook (username, phone)
                 VALUES (%s, %s)
                 ON CONFLICT (phone) DO NOTHING;
-            """, (row['username'], row['phone']))
+            """, (row[col_name], row[col_phone]))
     conn.commit()
     cur.close()
     conn.close()
