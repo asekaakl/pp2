@@ -5,7 +5,7 @@ import csv
 def connect():
     return psycopg2.connect(
         host="localhost",
-        database="postgres",
+        database="suppliers",
         user="postgres",
         password="asauturlan2007"
     )
