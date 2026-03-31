@@ -7,7 +7,7 @@ def connect():
         host="localhost",
         database="postgres",
         user="postgres",
-        password="твой_пароль"
+        password="asauturlan2007"
     )
 
 # 1. Загрузить из CSV
