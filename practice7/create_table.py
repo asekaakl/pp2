@@ -2,9 +2,9 @@ import psycopg2
 
 conn = psycopg2.connect(
     host="localhost",
-    database="postgres",
+    database="suppliers",
     user="postgres",
-    password="твой_пароль"
+    password="asauturlan2007"
 )
 cur = conn.cursor()
 

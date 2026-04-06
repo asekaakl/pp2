@@ -1,135 +1,203 @@
-import psycopg2
+from connect import get_connection
 import csv
+import os
 
-# Подключение
-def connect():
-    return psycopg2.connect(
-        host="localhost",
-        database="suppliers",
-        user="postgres",
-        password="asauturlan2007"
+def add_contact():
+    name = input("Enter name: ").strip()
+    phone = input("Enter phone: ").strip()
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "INSERT INTO contacts (first_name, phone) VALUES (%s, %s)",
+        (name, phone)
     )
 
-# 1. Загрузить из CSV
-def insert_from_csv(filename):
-    conn = connect()
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    print("Contact added.")
+
+def import_csv():
+    file_name = "Practice7/contacts.csv"
+
+    conn = get_connection()
     cur = conn.cursor()
-    with open(filename, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        fieldnames = reader.fieldnames
-        print(f"Колонки в CSV: {fieldnames}")
-        col_name = fieldnames[0]
-        col_phone = fieldnames[1]
+
+    with open(file_name, "r", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        next(reader, None)
+
         for row in reader:
-            cur.execute("""
-                INSERT INTO phonebook (username, phone)
-                VALUES (%s, %s)
-                ON CONFLICT (phone) DO NOTHING;
-            """, (row[col_name], row[col_phone]))
+            if len(row) >= 2:
+                name = row[0].strip()
+                phone = row[1].strip()
+
+                cur.execute(
+                    "INSERT INTO contacts (first_name, phone) VALUES (%s, %s)",
+                    (name, phone)
+                )
+
     conn.commit()
     cur.close()
     conn.close()
-    print("Данные из CSV загружены!")
 
-# 2. Добавить вручную с консоли
-def insert_from_console():
-    first = input("Имя: ")
-    last = input("Фамилия: ")
-    phone = input("Телефон: ")
-    conn = connect()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO phonebook (first_name, last_name, phone)
-        VALUES (%s, %s, %s)
-        ON CONFLICT (phone) DO NOTHING;
-    """, (first, last, phone))
-    conn.commit()
-    cur.close()
-    conn.close()
-    print("Контакт добавлен!")
+    print("CSV imported.")
 
-# 3. Обновить контакт
-def update_contact():
-    phone = input("Введите телефон контакта для обновления: ")
-    print("Что обновить? 1-Имя, 2-Телефон")
-    choice = input("Выбор: ")
-    conn = connect()
+def show_all():
+    conn = get_connection()
     cur = conn.cursor()
-    if choice == '1':
-        new_name = input("Новое имя: ")
-        cur.execute("UPDATE phonebook SET first_name=%s WHERE phone=%s", (new_name, phone))
-    elif choice == '2':
-        new_phone = input("Новый телефон: ")
-        cur.execute("UPDATE phonebook SET phone=%s WHERE phone=%s", (new_phone, phone))
-    conn.commit()
-    cur.close()
-    conn.close()
-    print("Контакт обновлён!")
 
-# 4. Поиск / фильтрация
-def search_contacts():
-    print("Поиск: 1-По имени, 2-По префиксу телефона, 3-Все контакты")
-    choice = input("Выбор: ")
-    conn = connect()
-    cur = conn.cursor()
-    if choice == '1':
-        name = input("Введите имя: ")
-        cur.execute("SELECT * FROM phonebook WHERE first_name ILIKE %s", (f'%{name}%',))
-    elif choice == '2':
-        prefix = input("Введите префикс телефона (например +7701): ")
-        cur.execute("SELECT * FROM phonebook WHERE phone LIKE %s", (f'{prefix}%',))
-    else:
-        cur.execute("SELECT * FROM phonebook ORDER BY first_name;")
-    
+    cur.execute("SELECT * FROM contacts ORDER BY id")
     rows = cur.fetchall()
-    print(f"\n{'ID':<5} {'Имя':<15} {'Фамилия':<15} {'Телефон':<15}")
-    print("-" * 50)
-    for row in rows:
-        print(f"{row[0]:<5} {row[1]:<15} {row[2]:<15} {row[3]:<15}")
+
+    if len(rows) == 0:
+        print("No contacts.")
+    else:
+        for row in rows:
+            print(row)
+
     cur.close()
     conn.close()
 
-# 5. Удалить контакт
-def delete_contact():
-    print("Удалить: 1-По имени, 2-По телефону")
-    choice = input("Выбор: ")
-    conn = connect()
+def find_by_name():
+    part = input("Enter name: ").strip()
+
+    conn = get_connection()
     cur = conn.cursor()
-    if choice == '1':
-        name = input("Введите имя: ")
-        cur.execute("DELETE FROM phonebook WHERE first_name ILIKE %s", (f'%{name}%',))
-    elif choice == '2':
-        phone = input("Введите телефон: ")
-        cur.execute("DELETE FROM phonebook WHERE phone=%s", (phone,))
-    conn.commit()
-    print(f"Удалено записей: {cur.rowcount}")
+
+    cur.execute(
+        "SELECT * FROM contacts WHERE first_name ILIKE %s ORDER BY id",
+        ("%" + part + "%",)
+    )
+
+    rows = cur.fetchall()
+
+    if len(rows) == 0:
+        print("Nothing found.")
+    else:
+        for row in rows:
+            print(row)
     cur.close()
     conn.close()
 
-# Главное меню
+def find_by_prefix():
+    prefix = input("Enter phone prefix: ").strip()
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT * FROM contacts WHERE phone LIKE %s ORDER BY id",
+        (prefix + "%",)
+    )
+
+    rows = cur.fetchall()
+
+    if len(rows) == 0:
+        print("Nothing found.")
+    else:
+        for row in rows:
+            print(row)
+
+    cur.close()
+    conn.close()
+
+def change_name():
+    old_name = input("Old name: ").strip()
+    new_name = input("New name: ").strip()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE contacts SET first_name = %s WHERE first_name = %s",
+        (new_name, old_name)
+    )
+    conn.commit()
+    print("Updated:", cur.rowcount)
+    cur.close()
+    conn.close()
+
+def change_phone():
+    name = input("Contact name: ").strip()
+    new_phone = input("New phone: ").strip()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE contacts SET phone = %s WHERE first_name = %s",
+        (new_phone, name)
+    )
+    conn.commit()
+    print("Updated:", cur.rowcount)
+    cur.close()
+    conn.close()
+
+def remove_by_name():
+    name = input("Name to delete: ").strip()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "DELETE FROM contacts WHERE first_name = %s",
+        (name,)
+    )
+    conn.commit()
+    print("Deleted:", cur.rowcount)
+    cur.close()
+    conn.close()
+
+def remove_by_phone():
+    phone = input("Phone to delete: ").strip()
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "DELETE FROM contacts WHERE phone = %s",
+        (phone,)
+    )
+
+    conn.commit()
+    print("Deleted:", cur.rowcount)
+    cur.close()
+    conn.close()
+
 def menu():
     while True:
-        print("\n=== PhoneBook ===")
-        print("1. Загрузить из CSV")
-        print("2. Добавить вручную")
-        print("3. Обновить контакт")
-        print("4. Найти контакт")
-        print("5. Удалить контакт")
-        print("0. Выход")
-        choice = input("Выбор: ")
-
-        if choice == '1':
-            insert_from_csv('contacts.csv')
-        elif choice == '2':
-            insert_from_console()
-        elif choice == '3':
-            update_contact()
-        elif choice == '4':
-            search_contacts()
-        elif choice == '5':
-            delete_contact()
-        elif choice == '0':
+        print("\nPhoneBook")
+        print("1 - Add contact")
+        print("2 - Import from csv")
+        print("3 - Show all contacts")
+        print("4 - Search by name")
+        print("5 - Search by phone prefix")
+        print("6 - Update name")
+        print("7 - Update phone")
+        print("8 - Delete by name")
+        print("9 - Delete by phone")
+        print("0 - Exit")
+        choice = input("Choose: ").strip()
+        if choice == "1":
+            add_contact()
+        elif choice == "2":
+            import_csv()
+        elif choice == "3":
+            show_all()
+        elif choice == "4":
+            find_by_name()
+        elif choice == "5":
+            find_by_prefix()
+        elif choice == "6":
+            change_name()
+        elif choice == "7":
+            change_phone()
+        elif choice == "8":
+            remove_by_name()
+        elif choice == "9":
+            remove_by_phone()
+        elif choice == "0":
+            print("Bye")
             break
+        else:
+            print("Wrong choice")
 
-if __name__ == "__main__":
-    menu()
+menu()
