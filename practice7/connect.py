@@ -3,11 +3,14 @@ from config import load_config
 
 
 def get_connection():
-    cfg = load_config()
-    conn = psycopg2.connect(**cfg)
-    return conn
+    config = load_config()
+    try:
+        conn = psycopg2.connect(**config)
+        print('Connected to the PostgreSQL server.')
+        return conn
+    except (psycopg2.DatabaseError, Exception) as error:
+        print(error)
 
 
-conn = get_connection()
-print("Connected successfully!")
-conn.close()
+if __name__ == '__main__':
+    get_connection()

@@ -1,23 +1,25 @@
-import psycopg2
+from connect import get_connection
 
-conn = psycopg2.connect(
-    host="localhost",
-    database="suppliers",
-    user="postgres",
-    password="asauturlan2007"
-)
-cur = conn.cursor()
 
-cur.execute("""
-    DROP TABLE IF EXISTS phonebook;
-    CREATE TABLE phonebook (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50),
-        phone VARCHAR(20) UNIQUE NOT NULL
-    );
-""")
+def create_table():
+    conn = get_connection()
+    if not conn:
+        return
 
-conn.commit()
-cur.close()
-conn.close()
-print("Таблица создана!")
+    cur = conn.cursor()
+    cur.execute("""
+        DROP TABLE IF EXISTS contacts;
+        CREATE TABLE contacts (
+            id SERIAL PRIMARY KEY,
+            first_name VARCHAR(50),
+            phone VARCHAR(20) UNIQUE NOT NULL
+        );
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Таблица создана!")
+
+
+if __name__ == '__main__':
+    create_table()
