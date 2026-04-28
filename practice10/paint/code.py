@@ -7,11 +7,6 @@ COLORS = [
     (220, 0,   0),    # красный
     (0,   200, 0),    # зелёный
     (0,   0,   220),  # синий
-    (255, 215, 0),    # жёлтый
-    (255, 140, 0),    # оранжевый
-    (150, 0,   200),  # фиолетовый
-    (0,   200, 200),  # голубой
-    (139, 69,  19),   # коричневый
 ]
 
 BLACK = (0,   0,   0)
@@ -19,7 +14,7 @@ WHITE = (255, 255, 255)
 GRAY  = (200, 200, 200)
 DGRAY = (150, 150, 150)
 
-TOOLBAR_H = 60  # высота панели инструментов
+TOOLBAR_H = 60 
 
 class Paint:
     def __init__(self):
@@ -84,7 +79,7 @@ class Paint:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mx, my = event.pos
 
-                    # Клик по панели инструментов
+                    
                     if my < TOOLBAR_H:
                         # Инструменты
                         tools = ["pen", "rect", "circle", "eraser"]
@@ -109,7 +104,7 @@ class Paint:
                         mx, my = event.pos
                         end_pos = (mx, my - TOOLBAR_H)
 
-                        # Рисуем прямоугольник
+                        
                         if self.tool == "rect":
                             x = min(self.start_pos[0], end_pos[0])
                             y = min(self.start_pos[1], end_pos[1])
@@ -121,18 +116,12 @@ class Paint:
                         if self.tool == "circle":
                             cx = (self.start_pos[0] + end_pos[0]) // 2
                             cy = (self.start_pos[1] + end_pos[1]) // 2
-                            r  = int(((end_pos[0] - self.start_pos[0])**2 + (end_pos[1] - self.start_pos[1])**2) ** 0.5 // 2)
+                             int(((end_pos[0] - self.start_pos[0])**2 + (end_pos[1] - self.start_pos[1])**2) ** 0.5 // 2)
                             pygame.draw.circle(self.canvas, self.color, (cx, cy), r, 2)
 
                     self.drawing   = False
                     self.start_pos = None
-
-                # Размер кисти колёсиком
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_KP_PLUS:
-                        self.brush_size = min(30, self.brush_size + 1)
-                    if event.key == pygame.K_KP_MINUS:
-                        self.brush_size = max(1, self.brush_size - 1)
+                    
                 # Клавиши
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_c:
@@ -146,7 +135,7 @@ class Paint:
                     if event.key == pygame.K_4:
                         self.tool = "eraser"
 
-            # Рисование пером и ластиком (зажатая кнопка мыши)
+            
             if pygame.mouse.get_pressed()[0]:
                 mx, my = pygame.mouse.get_pos()
                 if my > TOOLBAR_H:

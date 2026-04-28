@@ -11,7 +11,7 @@ class Ball:
         self.clock = pygame.time.Clock()
 
         self.radius = 25
-        self.step = 20  # пикселей за одно нажатие
+        self.step = 20  
 
         # Начальная позиция — центр экрана
         self.x = self.W // 2
@@ -42,7 +42,6 @@ class Ball:
                         if self.x + self.radius + self.step <= self.W:
                             self.x += self.step
 
-            # Белый фон
             self.screen.fill(WHITE)
 
             # Рисуем шар
